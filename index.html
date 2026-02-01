@@ -151,52 +151,64 @@
     <source src="marry_you.mp3" type="audio/mpeg" />
   </audio>
 
-  <script>
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const modal = document.getElementById('sadModal');
-    const modalYes = document.getElementById('modalYes');
-    const modalNo = document.getElementById('modalNo');
-    const loveSong = document.getElementById('loveSong');
+ <script>
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const modal = document.getElementById('sadModal');
+  const modalYes = document.getElementById('modalYes');
+  const modalNo = document.getElementById('modalNo');
+  const loveSong = document.getElementById('loveSong');
 
-    yesBtn.addEventListener('click', () => {
-      spawnHearts();
-      loveSong.play().catch(() => {});
-    });
+  // MAIN YES — hearts + music only
+  yesBtn.addEventListener('click', () => {
+    spawnHearts();
+    loveSong.play().catch(() => {});
+  });
 
-    function spawnHearts() {
-      for (let i = 0; i < 30; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.textContent = '❤️';
-        heart.style.left = Math.random() * window.innerWidth + 'px';
-        heart.style.top = window.innerHeight - 40 + 'px';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
-      }
+  function spawnHearts() {
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '❤️';
+      heart.style.left = Math.random() * window.innerWidth + 'px';
+      heart.style.top = window.innerHeight - 40 + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
     }
+  }
 
-    noBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
+  // NO opens sad dog
+  noBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    resetModalYesPosition();
+  });
 
-    modalNo.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+  // ESCAPE hatch
+  modalNo.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
 
-    modalYes.addEventListener('click', () => {
-      modal.style.display = 'none';
-      teleportYesButton();
-    });
+  // DOG YES — TELEPORTS FOREVER 😈
+  modalYes.addEventListener('mouseenter', teleportModalYes);
+  modalYes.addEventListener('click', teleportModalYes);
 
-    function teleportYesButton() {
-      const maxX = window.innerWidth - yesBtn.offsetWidth;
-      const maxY = window.innerHeight - yesBtn.offsetHeight;
-      yesBtn.style.position = 'fixed';
-      yesBtn.style.left = Math.random() * maxX + 'px';
-      yesBtn.style.top = Math.random() * maxY + 'px';
-    }
-  </script>
+  function teleportModalYes() {
+    const btn = modalYes;
+
+    const padding = 20;
+    const maxX = window.innerWidth - btn.offsetWidth - padding;
+    const maxY = window.innerHeight - btn.offsetHeight - padding;
+
+    btn.style.position = 'fixed';
+    btn.style.left = Math.random() * maxX + padding + 'px';
+    btn.style.top = Math.random() * maxY + padding + 'px';
+  }
+
+  function resetModalYesPosition() {
+    modalYes.style.position = 'static';
+  }
+</script>
+
 
 </body>
 </html>
