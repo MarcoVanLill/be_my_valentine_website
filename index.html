@@ -129,7 +129,7 @@
   <div class="card">
     <h1 id="mainText">Alida 💕<br/>Will you be my Valentine?</h1>
 
-    <div class="buttons">
+    <div class="buttons" id="buttonsContainer">
       <button id="yesBtn">Yes 💖</button>
       <button id="noBtn">No 💔</button>
     </div>
@@ -157,6 +157,7 @@
 <script>
 const yesBtn = document.getElementById('yesBtn');
 const noBtn = document.getElementById('noBtn');
+const buttonsContainer = document.getElementById('buttonsContainer');
 const modal = document.getElementById('sadModal');
 const modalYes = document.getElementById('modalYes');
 const modalNo = document.getElementById('modalNo');
@@ -236,6 +237,8 @@ function spawnHearts() {
 yesBtn.addEventListener('click', () => {
   const text = document.getElementById('mainText');
   text.innerHTML = "See you February 14th 💕💕💕";
+
+  buttonsContainer.style.display = 'none';
 
   spawnHearts();
   spawnValentineGifs();
