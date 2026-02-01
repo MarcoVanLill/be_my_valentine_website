@@ -70,7 +70,6 @@
       color: white;
     }
 
-    /* Hearts */
     .heart {
       position: fixed;
       font-size: 22px;
@@ -83,7 +82,6 @@
       100% { opacity: 0; transform: translateY(-160px) scale(1.8); }
     }
 
-    /* Modal */
     .modal {
       position: fixed;
       inset: 0;
@@ -152,124 +150,122 @@
   </audio>
 
   <audio id="sadSong">
-  <source src="sad_meme.mp3" type="audio/mpeg" />
-</audio>
+    <source src="sad_meme.mp3" type="audio/mpeg" />
+  </audio>
 
 <script>
-  const yesBtn = document.getElementById('yesBtn');
-  const noBtn = document.getElementById('noBtn');
-  const modal = document.getElementById('sadModal');
-  const modalYes = document.getElementById('modalYes');
-  const modalNo = document.getElementById('modalNo');
-  const loveSong = document.getElementById('loveSong');
-  const sadSong = document.getElementById('sadSong');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+const modal = document.getElementById('sadModal');
+const modalYes = document.getElementById('modalYes');
+const modalNo = document.getElementById('modalNo');
+const loveSong = document.getElementById('loveSong');
+const sadSong = document.getElementById('sadSong');
 
-  let sadSongPlayed = false;
-  let yesClicked = false;
-  let activeGifs = [];
+let sadSongPlayed = false;
 
-  const valentineGifs = [
-    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dvdcBNbAiNVT9Z0iwP/giphy.gif",
-    "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHd2bnR5Z3ExOWVwcGU3Z3cyNHB1bGdydXAxbDdwYjRxYW0zMnhkMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FY5vhK1zpoJGqap917/giphy.gif",
-    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/geslvCFM31sFW/giphy.gif"
-  ];
+const valentineGifs = [
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dvdcBNbAiNVT9Z0iwP/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHd2bnR5Z3ExOWVwcGU3Z3cyNHB1bGdydXAxbDdwYjRxYW0zMnhkMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FY5vhK1zpoJGqap917/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/geslvCFM31sFW/giphy.gif",
+  "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTUzbWZtdTd1a25yNHB4ZHY4ajNiN2c0dnlid2J0dGh6OXpubTdqeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lsJCkIKV6AT28/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/tlawNnswcTAmGjKRHQ/giphy.gif"
+];
 
-  function spawnValentineGifs() {
-    if (activeGifs.length > 0) return;
+let activeGifs = [];
+const GIF_SIZE = 120;
 
-    const card = document.querySelector('.card');
-    const cardRect = card.getBoundingClientRect();
-
-    valentineGifs.forEach(gifUrl => {
-      const img = document.createElement('img');
-      img.src = gifUrl;
-
-      img.style.position = 'fixed';
-      img.style.width = '120px';
-      img.style.borderRadius = '16px';
-      img.style.zIndex = 1;
-      img.style.animation = 'pop 0.4s ease';
-
-      let x, y, safe = false;
-      while (!safe) {
-        x = Math.random() * (window.innerWidth - 120);
-        y = Math.random() * (window.innerHeight - 120);
-
-        safe =
-          x + 120 < cardRect.left ||
-          x > cardRect.right ||
-          y + 120 < cardRect.top ||
-          y > cardRect.bottom;
-      }
-
-      img.style.left = x + 'px';
-      img.style.top = y + 'px';
-
-      document.body.appendChild(img);
-      activeGifs.push(img);
-    });
-  }
-
-  function spawnHearts() {
-    for (let i = 0; i < 30; i++) {
-      const heart = document.createElement('div');
-      heart.className = 'heart';
-      heart.textContent = '❤️';
-      heart.style.left = Math.random() * window.innerWidth + 'px';
-      heart.style.top = window.innerHeight - 40 + 'px';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 3000);
-    }
-  }
-
-  // YES 💖
-  yesBtn.addEventListener('click', () => {
-    if (yesClicked) return;
-    yesClicked = true;
-
-    spawnHearts();
-    spawnValentineGifs();
-    loveSong.play().catch(() => {});
+function overlaps(x, y) {
+  return activeGifs.some(gif => {
+    const gx = parseFloat(gif.style.left);
+    const gy = parseFloat(gif.style.top);
+    return Math.abs(gx - x) < GIF_SIZE && Math.abs(gy - y) < GIF_SIZE;
   });
+}
 
-  // NO 💔
-  noBtn.addEventListener('click', () => {
-    modal.style.display = 'flex';
-    resetModalYesPosition();
+function spawnValentineGifs() {
+  if (activeGifs.length > 0) return;
 
-    if (!sadSongPlayed) {
-      sadSong.play().catch(() => {});
-      sadSongPlayed = true;
-    }
+  const card = document.querySelector('.card').getBoundingClientRect();
+
+  valentineGifs.forEach(url => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.style.position = 'fixed';
+    img.style.width = GIF_SIZE + 'px';
+    img.style.borderRadius = '16px';
+    img.style.zIndex = 1;
+    img.style.animation = 'pop 0.4s ease';
+
+    let x, y, attempts = 0;
+    do {
+      x = Math.random() * (window.innerWidth - GIF_SIZE);
+      y = Math.random() * (window.innerHeight - GIF_SIZE);
+      attempts++;
+    } while (
+      (x + GIF_SIZE > card.left && x < card.right && y + GIF_SIZE > card.top && y < card.bottom) ||
+      overlaps(x, y)
+    && attempts < 100);
+
+    img.style.left = x + 'px';
+    img.style.top = y + 'px';
+
+    document.body.appendChild(img);
+    activeGifs.push(img);
   });
+}
 
-  // Modal Go Back
-  modalNo.addEventListener('click', () => {
-    modal.style.display = 'none';
-    sadSong.pause();
-    sadSong.currentTime = 0;
-  });
+function clearValentineGifs() {
+  activeGifs.forEach(g => g.remove());
+  activeGifs = [];
+}
 
-  // EVIL DOG BUTTON 😈
-  modalYes.addEventListener('mouseenter', teleportModalYes);
-  modalYes.addEventListener('click', teleportModalYes);
-
-  function teleportModalYes() {
-    const padding = 20;
-    const maxX = window.innerWidth - modalYes.offsetWidth - padding;
-    const maxY = window.innerHeight - modalYes.offsetHeight - padding;
-
-    modalYes.style.position = 'fixed';
-    modalYes.style.left = Math.random() * maxX + padding + 'px';
-    modalYes.style.top = Math.random() * maxY + padding + 'px';
+function spawnHearts() {
+  for (let i = 0; i < 30; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.textContent = '❤️';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.top = window.innerHeight - 40 + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
   }
+}
 
-  function resetModalYesPosition() {
-    modalYes.style.position = 'static';
+yesBtn.addEventListener('click', () => {
+  spawnHearts();
+  spawnValentineGifs();
+  loveSong.play().catch(() => {});
+});
+
+noBtn.addEventListener('click', () => {
+  modal.style.display = 'flex';
+  resetModalYesPosition();
+
+  if (!sadSongPlayed) {
+    sadSong.play().catch(() => {});
+    sadSongPlayed = true;
   }
+});
+
+modalNo.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+modalYes.addEventListener('mouseenter', teleportModalYes);
+modalYes.addEventListener('click', teleportModalYes);
+
+function teleportModalYes() {
+  const padding = 20;
+  modalYes.style.position = 'fixed';
+  modalYes.style.left = Math.random() * (window.innerWidth - modalYes.offsetWidth - padding) + 'px';
+  modalYes.style.top = Math.random() * (window.innerHeight - modalYes.offsetHeight - padding) + 'px';
+}
+
+function resetModalYesPosition() {
+  modalYes.style.position = 'static';
+}
 </script>
-
-
 
 </body>
 </html>
