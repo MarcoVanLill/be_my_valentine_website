@@ -127,7 +127,8 @@
 <body>
 
   <div class="card">
-    <h1>Alida 💕<br/>Will you be my Valentine?</h1>
+    <h1 id="mainText">Alida 💕<br/>Will you be my Valentine?</h1>
+
     <div class="buttons">
       <button id="yesBtn">Yes 💖</button>
       <button id="noBtn">No 💔</button>
@@ -233,10 +234,14 @@ function spawnHearts() {
 }
 
 yesBtn.addEventListener('click', () => {
+  const text = document.getElementById('mainText');
+  text.innerHTML = "See you February 14th 💕<br/><span style='font-size:1.4rem'>&lt;3 &lt;3</span>";
+
   spawnHearts();
   spawnValentineGifs();
   loveSong.play().catch(() => {});
 });
+
 
 noBtn.addEventListener('click', () => {
   modal.style.display = 'flex';
