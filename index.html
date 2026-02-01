@@ -155,47 +155,60 @@
   <source src="sad_meme.mp3" type="audio/mpeg" />
 </audio>
 
- <script>
+<script>
   const yesBtn = document.getElementById('yesBtn');
   const noBtn = document.getElementById('noBtn');
   const modal = document.getElementById('sadModal');
   const modalYes = document.getElementById('modalYes');
   const modalNo = document.getElementById('modalNo');
   const loveSong = document.getElementById('loveSong');
-const sadSong = document.getElementById('sadSong');
-let sadSongPlayed = false;
+  const sadSong = document.getElementById('sadSong');
 
-const valentineGifs = [
-  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dvdcBNbAiNVT9Z0iwP/giphy.gif",
-  "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHd2bnR5Z3ExOWVwcGU3Z3cyNHB1bGdydXAxbDdwYjRxYW0zMnhkMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FY5vhK1zpoJGqap917/giphy.gif",
-  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/geslvCFM31sFW/giphy.gif"
-];
-function spawnValentineGifs() {
-  for (let i = 0; i < 6; i++) {
-    const img = document.createElement('img');
+  let sadSongPlayed = false;
+  let yesClicked = false;
+  let activeGifs = [];
 
-    img.src = valentineGifs[Math.floor(Math.random() * valentineGifs.length)];
-    img.style.position = 'fixed';
-    img.style.width = '120px';
-    img.style.borderRadius = '16px';
-    img.style.left = Math.random() * (window.innerWidth - 120) + 'px';
-    img.style.top = Math.random() * (window.innerHeight - 120) + 'px';
-    img.style.zIndex = 5;
-    img.style.animation = 'pop 0.4s ease';
+  const valentineGifs = [
+    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dvdcBNbAiNVT9Z0iwP/giphy.gif",
+    "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHd2bnR5Z3ExOWVwcGU3Z3cyNHB1bGdydXAxbDdwYjRxYW0zMnhkMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FY5vhK1zpoJGqap917/giphy.gif",
+    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/geslvCFM31sFW/giphy.gif"
+  ];
 
-    document.body.appendChild(img);
+  function spawnValentineGifs() {
+    if (activeGifs.length > 0) return;
 
-    // Auto-remove after a few seconds so it doesn’t get cluttered
-    setTimeout(() => img.remove(), 4000);
+    const card = document.querySelector('.card');
+    const cardRect = card.getBoundingClientRect();
+
+    valentineGifs.forEach(gifUrl => {
+      const img = document.createElement('img');
+      img.src = gifUrl;
+
+      img.style.position = 'fixed';
+      img.style.width = '120px';
+      img.style.borderRadius = '16px';
+      img.style.zIndex = 1;
+      img.style.animation = 'pop 0.4s ease';
+
+      let x, y, safe = false;
+      while (!safe) {
+        x = Math.random() * (window.innerWidth - 120);
+        y = Math.random() * (window.innerHeight - 120);
+
+        safe =
+          x + 120 < cardRect.left ||
+          x > cardRect.right ||
+          y + 120 < cardRect.top ||
+          y > cardRect.bottom;
+      }
+
+      img.style.left = x + 'px';
+      img.style.top = y + 'px';
+
+      document.body.appendChild(img);
+      activeGifs.push(img);
+    });
   }
-}
-
-yesBtn.addEventListener('click', () => {
-  spawnHearts();
-  spawnValentineGifs();
-  loveSong.play().catch(() => {});
-});
-
 
   function spawnHearts() {
     for (let i = 0; i < 30; i++) {
@@ -209,43 +222,53 @@ yesBtn.addEventListener('click', () => {
     }
   }
 
-  // NO opens sad dog
-noBtn.addEventListener('click', () => {
-  modal.style.display = 'flex';
-  resetModalYesPosition();
+  // YES 💖
+  yesBtn.addEventListener('click', () => {
+    if (yesClicked) return;
+    yesClicked = true;
 
-  if (!sadSongPlayed) {
-    sadSong.play().catch(() => {});
-    sadSongPlayed = true;
-  }
-});
-
-
-  // ESCAPE hatch
-  modalNo.addEventListener('click', () => {
-    modal.style.display = 'none';
+    spawnHearts();
+    spawnValentineGifs();
+    loveSong.play().catch(() => {});
   });
 
-  // DOG YES — TELEPORTS FOREVER 😈
+  // NO 💔
+  noBtn.addEventListener('click', () => {
+    modal.style.display = 'flex';
+    resetModalYesPosition();
+
+    if (!sadSongPlayed) {
+      sadSong.play().catch(() => {});
+      sadSongPlayed = true;
+    }
+  });
+
+  // Modal Go Back
+  modalNo.addEventListener('click', () => {
+    modal.style.display = 'none';
+    sadSong.pause();
+    sadSong.currentTime = 0;
+  });
+
+  // EVIL DOG BUTTON 😈
   modalYes.addEventListener('mouseenter', teleportModalYes);
   modalYes.addEventListener('click', teleportModalYes);
 
   function teleportModalYes() {
-    const btn = modalYes;
-
     const padding = 20;
-    const maxX = window.innerWidth - btn.offsetWidth - padding;
-    const maxY = window.innerHeight - btn.offsetHeight - padding;
+    const maxX = window.innerWidth - modalYes.offsetWidth - padding;
+    const maxY = window.innerHeight - modalYes.offsetHeight - padding;
 
-    btn.style.position = 'fixed';
-    btn.style.left = Math.random() * maxX + padding + 'px';
-    btn.style.top = Math.random() * maxY + padding + 'px';
+    modalYes.style.position = 'fixed';
+    modalYes.style.left = Math.random() * maxX + padding + 'px';
+    modalYes.style.top = Math.random() * maxY + padding + 'px';
   }
 
   function resetModalYesPosition() {
     modalYes.style.position = 'static';
   }
 </script>
+
 
 
 </body>
