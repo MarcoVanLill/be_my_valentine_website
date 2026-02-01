@@ -151,6 +151,10 @@
     <source src="marry_you.mp3" type="audio/mpeg" />
   </audio>
 
+  <audio id="sadSong">
+  <source src="sad_meme.mp3" type="audio/mpeg" />
+</audio>
+
  <script>
   const yesBtn = document.getElementById('yesBtn');
   const noBtn = document.getElementById('noBtn');
@@ -158,12 +162,40 @@
   const modalYes = document.getElementById('modalYes');
   const modalNo = document.getElementById('modalNo');
   const loveSong = document.getElementById('loveSong');
+const sadSong = document.getElementById('sadSong');
+let sadSongPlayed = false;
 
-  // MAIN YES — hearts + music only
-  yesBtn.addEventListener('click', () => {
-    spawnHearts();
-    loveSong.play().catch(() => {});
-  });
+const valentineGifs = [
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/dvdcBNbAiNVT9Z0iwP/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHd2bnR5Z3ExOWVwcGU3Z3cyNHB1bGdydXAxbDdwYjRxYW0zMnhkMSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FY5vhK1zpoJGqap917/giphy.gif",
+  "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW1kNGl6eTJyNWsybnJ0M205bnp6eXV3dDRsY2thcGdhMmc3NTh2eiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/geslvCFM31sFW/giphy.gif"
+];
+function spawnValentineGifs() {
+  for (let i = 0; i < 6; i++) {
+    const img = document.createElement('img');
+
+    img.src = valentineGifs[Math.floor(Math.random() * valentineGifs.length)];
+    img.style.position = 'fixed';
+    img.style.width = '120px';
+    img.style.borderRadius = '16px';
+    img.style.left = Math.random() * (window.innerWidth - 120) + 'px';
+    img.style.top = Math.random() * (window.innerHeight - 120) + 'px';
+    img.style.zIndex = 5;
+    img.style.animation = 'pop 0.4s ease';
+
+    document.body.appendChild(img);
+
+    // Auto-remove after a few seconds so it doesn’t get cluttered
+    setTimeout(() => img.remove(), 4000);
+  }
+}
+
+yesBtn.addEventListener('click', () => {
+  spawnHearts();
+  spawnValentineGifs();
+  loveSong.play().catch(() => {});
+});
+
 
   function spawnHearts() {
     for (let i = 0; i < 30; i++) {
@@ -178,10 +210,16 @@
   }
 
   // NO opens sad dog
-  noBtn.addEventListener('click', () => {
-    modal.style.display = 'flex';
-    resetModalYesPosition();
-  });
+noBtn.addEventListener('click', () => {
+  modal.style.display = 'flex';
+  resetModalYesPosition();
+
+  if (!sadSongPlayed) {
+    sadSong.play().catch(() => {});
+    sadSongPlayed = true;
+  }
+});
+
 
   // ESCAPE hatch
   modalNo.addEventListener('click', () => {
